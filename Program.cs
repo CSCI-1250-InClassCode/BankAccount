@@ -1,9 +1,50 @@
-﻿namespace BankAccount
+﻿using BankAccount.Data;
+using System;
+using System.IO;
+namespace BankAccount
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            bool didItBreak = false;
+
+            do
+            {
+                try
+                {
+                    Console.WriteLine("Provide me a number between 1 - 10");
+                    int number = Convert.ToInt32(Console.ReadLine());
+                    if(number < 1 || number > 10)
+                    {
+                        throw new System.IndexOutOfRangeException();
+                    }
+                    didItBreak = false;
+
+                }
+                catch (System.FormatException ex)
+                {
+                    Console.WriteLine("It looks like you didn't enter a number, will you please try again! ");
+                    didItBreak = true;
+                }
+                catch (System.IndexOutOfRangeException ex)
+                { 
+                    Console.WriteLine("It looks like you gave me a number less then 1 or greater then 10! ");
+                    didItBreak = true;
+                }
+                catch(Exception ex)
+                {
+                    //some error
+                }
+
+            } while (didItBreak);
+
+            
+            
+
+      
+
+            /*
             Logger logger = new Logger();
             Logger loggerForBankAccount = new Logger();
 
@@ -22,21 +63,39 @@
 
             Person person = new Person(firstName, lastName, dob);
 
-            Console.WriteLine(logger.GetReport());
-            Console.WriteLine(loggerForBankAccount.GetReport());
-
             BankAccount account1 = new BankAccount("0001", 5.00M, person, loggerForBankAccount);
 
-            Console.WriteLine(logger.GetReport());
-            Console.WriteLine(loggerForBankAccount.GetReport());
+                string path = $@"C:\Users\desjardinsm\source\repos\BankAccount\{account1.AccountHolder.LastName}_{account1.AccountNumber}.txt";
 
-            Person person2 = new Person();
+                if (!File.Exists(path))
+                {
+                    using (StreamWriter sw = File.CreateText(path))
+                    {
+                        sw.WriteLine(account1.AccountNumber);
+                        sw.WriteLine(account1.Balance);
+                        sw.WriteLine(account1.AccountHolder.FirstName);
+                        sw.WriteLine(account1.AccountHolder.LastName);
+                        sw.WriteLine(account1.AccountHolder.DOB.Month);
+                        sw.WriteLine(account1.AccountHolder.DOB.Day);
+                        sw.WriteLine(account1.AccountHolder.DOB.Year);
 
-            BankAccount account2 = new BankAccount("0002", 1.00M, person2, loggerForBankAccount);
+                    }//it will automattically, close and kill the stream.
 
-            Console.WriteLine(loggerForBankAccount.GetReport());
-
-
+                }
+                else
+                {
+                    using (StreamWriter sw = new StreamWriter(path, true))
+                    {
+                        sw.WriteLine(account1.AccountNumber);
+                        sw.WriteLine(account1.Balance);
+                        sw.WriteLine(account1.AccountHolder.FirstName);
+                        sw.WriteLine(account1.AccountHolder.LastName);
+                        sw.WriteLine(account1.AccountHolder.DOB.Month);
+                        sw.WriteLine(account1.AccountHolder.DOB.Day);
+                        sw.WriteLine(account1.AccountHolder.DOB.Year);
+                    }
+                }
+            */
         }
     }
 }
